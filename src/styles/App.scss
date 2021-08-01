@@ -24,9 +24,8 @@ h1 {
 main {
     display: flex;
     flex-direction: column;
-    border: 1px solid $green;
+    border: 7px groove $highlight;
     align-items: center;
-    width: fit-content;
 }
 
 section {
@@ -36,7 +35,7 @@ section {
 }
 
 .button {
-    border: 1px solid $gold;
+    border: 1px solid $snow-blue;
     text-transform: uppercase;
     width: fit-content;
     padding: 0.3rem 1.5rem;
@@ -73,6 +72,8 @@ section {
     }
 
     &.moveTask {
+        border-color: $frost;
+        background-color: $frost;
         font-size: 1.5rem;
         padding: 0.5rem 0.5rem;
         margin-bottom: 0;
@@ -80,11 +81,11 @@ section {
     }
 
     &.delete {
-        background-color: $pink;
-        border-color: $pink;
+        background-color: $red;
+        border-color: $red;
 
         &:hover {
-            background-color: $red;
+            background-color: $pink;
             border-color: $red;
         }
     }
