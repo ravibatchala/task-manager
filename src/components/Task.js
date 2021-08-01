@@ -1,17 +1,17 @@
 import { useState } from "react";
 import "../styles/task.scss";
 
-const Task = ({ task, addTask, deleteTask, moveTask }) => {
+const Task = ({ addTask, deleteTask, moveTask, task }) => {
     const [urgencyLevel, setUrgencyLevel] = useState(task.urgency);
     const [collapsed, setCollapsed] = useState(task.isCollapsed);
     const [formAction, setFormAction] = useState("");
 
-    const setUrgency = (e) => {
-        setUrgencyLevel(e.target.attributes.urgency.value);
-    };
+    function setUrgency(event) {
+        setUrgencyLevel(event.target.attributes.urgency.value);
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    function handleSubmit(event) {
+        event.preventDefault();
 
         if (formAction === "save") {
             if (collapsed) {
@@ -19,8 +19,8 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
             } else {
                 let newTask = {
                     id: task.id,
-                    title: e.target.elements.title.value,
-                    description: e.target.elements.description.value,
+                    title: event.target.elements.title.value,
+                    description: event.target.elements.description.value,
                     urgency: urgencyLevel,
                     status: task.status,
                     isCollapsed: true,
@@ -34,33 +34,35 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
         if (formAction === "delete") {
             deleteTask(task.id);
         }
-    };
+    }
 
-    const handleMoveLeft = () => {
+    function handleMoveLeft() {
         let newStatus = "";
 
         if (task.status === "In Progress") {
-            newStatus = "BackLog";
+            newStatus = "To be Done";
         } else if (task.status === "Done") {
             newStatus = "In Progress";
         }
+
         if (newStatus !== "") {
             moveTask(task.id, newStatus);
         }
-    };
+    }
 
-    const handleMoveRight = () => {
+    function handleMoveRight() {
         let newStatus = "";
 
-        if (task.status === "BackLog") {
+        if (task.status === "To be Done") {
             newStatus = "In Progress";
         } else if (task.status === "In Progress") {
             newStatus = "Done";
         }
+
         if (newStatus !== "") {
             moveTask(task.id, newStatus);
         }
-    };
+    }
 
     return (
         <div className={`task ${collapsed ? "collapsedTask" : ""}`}>
@@ -75,7 +77,7 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
                     type="text"
                     className="title input"
                     name="title"
-                    placeholder="Enter Task"
+                    placeholder="Enter Title"
                     disabled={collapsed}
                     defaultValue={task.title}
                 />
@@ -86,7 +88,7 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
                     placeholder="Enter Description"
                     defaultValue={task.description}
                 />
-                <div className="urgencyLables">
+                <div className="urgencyLabels">
                     <label
                         className={`low ${
                             urgencyLevel === "low" ? "selected" : ""
@@ -98,6 +100,7 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
                             type="radio"
                             name="urgency"
                         />
+                        low
                     </label>
                     <label
                         className={`medium ${
@@ -110,6 +113,7 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
                             type="radio"
                             name="urgency"
                         />
+                        medium
                     </label>
                     <label
                         className={`high ${
@@ -122,6 +126,7 @@ const Task = ({ task, addTask, deleteTask, moveTask }) => {
                             type="radio"
                             name="urgency"
                         />
+                        high
                     </label>
                 </div>
                 <button

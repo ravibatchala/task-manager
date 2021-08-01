@@ -3,20 +3,20 @@ import Task from "./Task";
 
 const StatusLine = ({
     status,
-    task,
-    addEmptyTask,
+    tasks,
     addTask,
     deleteTask,
+    addEmptyTask,
     moveTask,
 }) => {
     let taskList, tasksForStatus;
 
-    const handleAddEmpty = () => {
+    function handleAddEmpty() {
         addEmptyTask(status);
-    };
+    }
 
-    if (task) {
-        tasksForStatus = task.filter((task) => {
+    if (tasks) {
+        tasksForStatus = tasks.filter((task) => {
             return task.status === status;
         });
     }

@@ -1,25 +1,88 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/App.scss";
 import StatusLine from "./StatusLine";
 
-const App = () => {
+function App() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        console.log("using effect");
+        loadTasksFromLocalStorage();
     }, []);
 
-    const addEmptyTask = (status) => {};
+    function addEmptyTask(status) {
+        const lastTask = tasks[tasks.length - 1];
 
-    const addTask = (taskToAdd) => {};
+        let newTaskId = 1;
 
-    const deleteTask = (taskId) => {};
+        if (lastTask !== undefined) {
+            newTaskId = lastTask.id + 1;
+        }
 
-    const moveTask = (id, newStatus) => {};
+        setTasks((tasks) => [
+            ...tasks,
+            {
+                id: newTaskId,
+                title: "",
+                description: "",
+                urgency: "",
+                status: status,
+            },
+        ]);
+    }
 
-    const saveTasksToLocalStorage = (tasks) => {};
+    function addTask(taskToAdd) {
+        let filteredTasks = tasks.filter((task) => {
+            return task.id !== taskToAdd.id;
+        });
 
-    const loadTasksToLocalStorage = () => {};
+        let newTaskList = [...filteredTasks, taskToAdd];
+
+        setTasks(newTaskList);
+
+        saveTasksToLocalStorage(newTaskList);
+    }
+
+    function deleteTask(taskId) {
+        let filteredTasks = tasks.filter((task) => {
+            return task.id !== taskId;
+        });
+
+        setTasks(filteredTasks);
+
+        saveTasksToLocalStorage(filteredTasks);
+    }
+
+    function moveTask(id, newStatus) {
+        let task = tasks.filter((task) => {
+            return task.id === id;
+        })[0];
+
+        let filteredTasks = tasks.filter((task) => {
+            return task.id !== id;
+        });
+
+        task.status = newStatus;
+
+        let newTaskList = [...filteredTasks, task];
+
+        setTasks(newTaskList);
+
+        saveTasksToLocalStorage(newTaskList);
+    }
+
+    function saveTasksToLocalStorage(tasks) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function loadTasksFromLocalStorage() {
+        let loadedTasks = localStorage.getItem("tasks");
+
+        let tasks = JSON.parse(loadedTasks);
+
+        if (tasks) {
+            setTasks(tasks);
+        }
+    }
 
     return (
         <div className="App">
@@ -27,15 +90,15 @@ const App = () => {
             <main>
                 <section>
                     <StatusLine
-                        task={tasks}
+                        tasks={tasks}
                         addEmptyTask={addEmptyTask}
                         addTask={addTask}
                         deleteTask={deleteTask}
                         moveTask={moveTask}
-                        status="BackLog"
+                        status="To be Done"
                     />
                     <StatusLine
-                        task={tasks}
+                        tasks={tasks}
                         addEmptyTask={addEmptyTask}
                         addTask={addTask}
                         deleteTask={deleteTask}
@@ -43,7 +106,7 @@ const App = () => {
                         status="In Progress"
                     />
                     <StatusLine
-                        task={tasks}
+                        tasks={tasks}
                         addEmptyTask={addEmptyTask}
                         addTask={addTask}
                         deleteTask={deleteTask}
@@ -54,6 +117,6 @@ const App = () => {
             </main>
         </div>
     );
-};
+}
 
 export default App;
